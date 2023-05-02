@@ -1,0 +1,94 @@
+{
+  "tests": [
+    {
+      "name": "Test 1. giza 1",
+      "setup": "make giza",
+      "run": "./giza 1",
+      "input": "",
+      "output": "*\r\nFinito",
+      "comparison": "included",
+      "timeout": 5,
+      "points": 1
+    },
+    {
+      "name": "Test 2. giza 2",
+      "setup": "make giza",
+      "run": "./giza 2",
+      "input": "",
+      "output": "*\r\n**\r\nFinito",
+      "comparison": "included",
+      "timeout": 5,
+      "points": 1
+    },
+    {
+      "name": "Test 3. giza 5",
+      "setup": "make giza",
+      "run": "./giza 5",
+      "input": "",
+      "output": "*\r\n**\r\n***\r\n****\r\n*****\r\nFinito",
+      "comparison": "included",
+      "timeout": 5,
+      "points": 1
+    },
+    {
+      "name": "Test 4. giza 10",
+      "setup": "make giza",
+      "run": "./giza 10",
+      "input": "",
+      "output": "*\r\n**\r\n***\r\n****\r\n*****\r\n******\r\n*******\r\n********\r\n*********\r\n**********\r\nFinito",
+      "comparison": "included",
+      "timeout": 5,
+      "points": 1
+    },
+    {
+      "name": "Test 5. giza 21",
+      "setup": "make giza",
+      "run": "./giza 21",
+      "input": "",
+      "output": "*\r\n**\r\n***\r\n****\r\n*****\r\n******\r\n*******\r\n********\r\n*********\r\n**********\r\n***********\r\n************\r\n*************\r\n**************\r\n***************\r\n****************\r\n*****************\r\n******************\r\n*******************\r\n********************\r\n*********************\r\nFinito\r\n",
+      "comparison": "included",
+      "timeout": 5,
+      "points": 1
+    },
+    {
+      "name": "Test 5. wc on empty input",
+      "setup": "make wc",
+      "run": "echo \"\" | ./wc",
+      "input": "",
+      "output": "Result=0",
+      "comparison": "included",
+      "timeout": 3,
+      "points": 1
+    },
+    {
+      "name": "Test 7. wc on a single word",
+      "setup": "make wc",
+      "run": "echo \"Single\" | ./wc",
+      "input": "",
+      "output": "Result=1",
+      "comparison": "included",
+      "timeout": 3,
+      "points": 1
+    },
+    {
+      "name": "Test 8. wc on input with white space",
+      "setup": "make wc",
+      "run": "echo \"goblins and ghouls\" | ./wc",
+      "input": "",
+      "output": "Result=3",
+      "comparison": "included",
+      "timeout": 3,
+      "points": 1
+    },
+    {
+      "name": "Test 9. wc with multiple spaces tabs carriage returns and newlines",
+      "setup": "make wc",
+      "run": "printf \"\\t\\tTo be\\t\\nor not\\n  to be\\r\" | ./wc",
+      "input": "",
+      "output": "Result=6",
+      "comparison": "included",
+      "timeout": 3,
+      "points": 2
+    }
+  ]
+}
