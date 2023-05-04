@@ -6,23 +6,42 @@
 // Initialize a jagged array object with the given number of bins.
 // The array is initially unpacked.
 void jagged_init(jagged_t* jagged, int bins) {
+    jagged->size = 0;
+    jagged->number_of_bins = bins;
+    
+    jagged->bins = calloc(bins,sizeof(entry_t*));
+    
+    // packed variables
+    jagged->packed_values = NULL;
+    jagged->offsets = NULL;
 }
 
 void jagged_free(jagged_t* jagged) {
+    free(jagged->bins);
+    
+    // REMEMBER: to add code to free the actual entry linklists 
 }
 
 // Return the number of elements in the jagged array
 int jagged_size(jagged_t* jagged) {
-    return -1;
+    return jagged->size;
 }
 
 // Return the number of bins
 int jagged_bins(jagged_t* jagged) {
-    return 0;
+    return jagged->number_of_bins;
 }
 
 // Return the number of slots in the given bin
 int jagged_slots(jagged_t* jagged, int bin) {
+    entry_t* cur = jagged->bins[bin];
+    int sizeOfBin = 0;
+    while(cur->next != NULL) {
+        cur = cur->next;
+        sizeOfBin++;
+    }
+
+
     return 0;
 }
 
