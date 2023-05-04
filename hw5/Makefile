@@ -1,40 +1,50 @@
-giza: giza.s
-	gcc -g -no-pie giza.s -o giza
+CC=gcc
+CFLAGS=-I. -g
+CPPFLAGS=-I. -g -std=c++11
+DEPS =
+OBJ = jagged.o main.o
 
-wc: wc.s
-	gcc -g -no-pie wc.s -o wc
+%.o: %.c $(DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+%.o: %.cpp $(DEPS)
+	g++ -c -o $@ $< $(CPPFLAGS)
+
+default: $(OBJ)
+	$(CC) -o jagged $^ $(CFLAGS)
 
 clean:
-	rm -f *.o giza
+	rm -f *.o *.out test/*.o
 
+run: default
+	./jagged
 
-test-giza-1: giza
-	./giza 1
+jagged_test: jagged.o test/test_main.o
+	g++ jagged.o test/test_main.o -o jagged_test
 
-test-giza-2: giza
-	./giza 2
+test-create: jagged_test
+	./jagged_test Jagged.Create
 
-test-giza-5: giza
-	./giza 5
+test-add: jagged_test
+	./jagged_test Jagged.Add
 
-test-giza-10: giza
-	./giza 10
+test-remove: jagged_test
+	./jagged_test Jagged.Remove
 
-test-giza-21: giza
-	./giza 21
+test-pack: jagged_test
+	./jagged_test Jagged.Pack
 
-test-giza: test-giza-1 test-giza-2 test-giza-5 test-giza-10 test-giza-21
+test-unpack: jagged_test
+	./jagged_test Jagged.Unpack
 
-test-wc-empty: wc
-	echo "" | ./wc
+test-leak: jagged_test
+	./jagged_test Jagged.Leak
 
-test-wc-one: wc
-	echo "single" | ./wc
+test-leak-valgrind: jagged_test
+	valgrind --leak-check=full --error-exitcode=1 \
+		--show-leak-kinds=all \
+		--errors-for-leak-kinds=definite,indirect,possible,reachable \
+		./jagged_test
 
-test-wc-space: wc
-	echo "globins and ghouls" | ./wc
-
-test-wc-multi: wc
-	echo -e "\tTo be   or not\n  to be \r" | ./wc
-
-test-wc: test-wc-empty test-wc-one test-wc-space test-wc-multi
+test: jagged_test
+	./jagged_test

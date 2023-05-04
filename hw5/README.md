@@ -1,2 +1,3 @@
-# Giza and Words with GAS
-Access your assignment [here](https://docs.google.com/document/d/1zCFxYM60W2IElCAWJOEyRvN2LoQZuyxSbmpXm7feQfk/edit?usp=sharing).
+# Jagged Array in C
+
+Your assignment is available [here](https://docs.google.com/document/d/17pG9nChu2MdxeVb2PfyiVQ_VU91VWmBM98Rx2-BjksA/edit?usp=sharing).
