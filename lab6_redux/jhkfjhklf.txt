@@ -1,0 +1,8 @@
+int main() {
+    jagged_t jag;
+    jagged_init(&jag);
+}
+
+jagged_t jagged_init() {
+    
+}

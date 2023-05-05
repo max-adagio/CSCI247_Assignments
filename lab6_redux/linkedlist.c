@@ -47,13 +47,10 @@ node_t* add_back(node_t** list, int value) {
 }
 
 void print_list(node_t* list, int backwards) {
-    while (list != NULL) {
-        printf("%d ", list->value);
-        list = list->next;
+    for (node_t* node = list; node != NULL; node = node->next) {
+        printf("%d \n", node->value);
     }
-    printf("\n");
 }
-
 
 int main() {
     node_t* bruh = NULL;
