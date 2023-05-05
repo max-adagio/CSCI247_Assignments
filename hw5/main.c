@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include "jagged.h"
 #include "jagged.c"
 
 int main(int argc, char** argv) {

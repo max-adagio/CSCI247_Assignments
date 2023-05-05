@@ -64,29 +64,39 @@ int jagged_slots(jagged_t* jagged, int bin) {
 // If success is -1, 0 is returned.
 int jagged_element(jagged_t* jagged, int bin, int slot, int* success) {
     entry_t* ptr = jagged->bins[bin];
-
     // traverse until you get to slot
-    int i = 0;
+    // if (jagged_slots(jagged, bin) >= slot) {
+    //     *success = -1;
+    //     return 0;
+    // }
     // ptr might be pointing to NULL if jagged_add isn't working
-    while (ptr->next != NULL && i < slot) {
+    for (int i = 0; i <= slot; i++) {
+        if (ptr == NULL) {  // if ptr is null
+            *success = -1; 
+            return 0;
+        } if (i == slot && ptr != NULL) {
+            // the slot has been found
+            *success = 0;
+            return ptr->value;
+        }
         ptr = ptr->next;
-        slot++;
     }
-    if (success != NULL) {
-        *success = 0;       
-    }
-    return ptr->value;
+
+    *success = -1;
+    return 0;
 }
 
 // Add an element to the bin. Return 0 is the element was
 // added, or -1 if the representation is packed
+
 // int jagged_add(jagged_t* jagged, int bin, int element) {
 //     entry_t* binPtr = jagged->bins[bin];
-
-//     if (binPtr == NULL) {
+    
+//     if (jagged->bins[bin] == NULL) {
 //         binPtr = (entry_t*) malloc(sizeof(entry_t*));
 //         binPtr->value = element;
-//         binPtr->next = NULL;
+//         binPtr->next = jagged->bins[bin];
+//         jagged->bins[bin] = binPtr;
 //     } else {
 //         // traverse to the last node in the list
 //         entry_t* node = binPtr;
@@ -102,30 +112,89 @@ int jagged_element(jagged_t* jagged, int bin, int slot, int* success) {
 // }
 
 int jagged_add(jagged_t* jagged, int bin, int element) {
-    if (jagged->packed_values == NULL) {
-        return -1;
+    entry_t* cur = jagged->bins[bin];
+    entry_t* new = (entry_t*) malloc(sizeof(entry_t*));
+    new->value = element;
+    new->next = NULL;
+
+    if (jagged->bins[bin] == NULL) {
+        jagged->bins[bin] = new;
+        // return 0;
     } else {
-        entry_t* new = (entry_t*) malloc(sizeof(entry_t*));
-        new->value = element;
-        new->next = NULL;
-        if (jagged->bins[bin] == NULL) {
-            jagged->bins[bin] = new;
-        } else {
-            entry_t* i = jagged->bins[bin];
-            while(i->next != NULL) {
-                i = i->next;
-            }   // now the last node has been found
-            i->next = new;         
-        }
-        return 0;
+        entry_t* i = cur;
+        while(i->next != NULL) {
+            i = i->next;
+        }   // now the last node has been found
+        i->next = new;         
+        // return 0;
     }
+
+    jagged->size++;
+    // free(new);
+    return -1;
 }
+
 
 
 // Remove the element from the given bin and slot. Return 0 on success,
 // or -1 if the representation was packed or element not found.
 int jagged_remove(jagged_t* jagged, int bin, int slot) {
-    return -1;
+    entry_t* ptr = jagged->bins[bin];
+
+    if (ptr == NULL) {  // the linked list is not empty
+        return -1;
+    } else if (slot == 0) {     // slot is 0
+        jagged->bins[bin] = ptr->next;
+        jagged->size--;
+        free(ptr);
+        return 0;
+    } else {        // linked list has values, and slot is not 0
+        for (int i = 0; i <= slot; i++) {
+            if (ptr->next == NULL) {
+                return -1;
+            } else if (i == slot - 1){  // possibly need to && with ptr->next == NULL
+                entry_t* nextNode = ptr->next->next;
+                free(ptr->next);
+                ptr->next = nextNode;
+                jagged->size--;
+                return 0;
+            }
+            ptr = ptr->next;
+        }
+    }
+
+
+    // // error catcher
+    // if (ptr == NULL || bin < 0 || bin > jagged->number_of_bins || slot < 0 || slot > jagged_slots(jagged, bin)) {
+    //     return -1;
+    // }
+
+    // int i = 0;
+    // while (i <= slot) {
+    //     ptr->next;
+    //     i++;
+    // }   // now ptr is pointing to the #"slot" node in the list
+    
+    // if (ptr->next->next != NULL) {
+    //     ptr->next = ptr->next->next;
+    //     free(ptr);
+    // } else {
+
+    // }
+
+    // // check if [bin][slot] exists
+    // for (int i = 0; i <= slot; i++) {
+    //     if (ptr == NULL) {  // if the bin is empty
+    //         return -1;      // there is no element to find
+
+    //     } if (i == slot && ptr != NULL) {
+    //         // the slot has been found
+            
+    //         return ptr->value;
+    //     }
+    //     ptr = ptr->next;
+    // }
+
 }
 
 // Unpack the jagged array. Return 0 if successful or -1 if the array is
