@@ -26,6 +26,15 @@ TEST_CASE("Jagged.Create", "[Jagged]") {
     jagged_free(&jagged);
 }
 
+// Get the index-th element from the linked list
+int test_entry_get_element(entry_t* list, int index) {
+    if (index == 0) {
+        return list->value;
+    } else {
+        return test_entry_get_element(list->next, index - 1);
+    }
+}
+
 TEST_CASE("Jagged.Add", "[Jagged]") {
     jagged_t jagged;
     jagged_init(&jagged, TEST_BINS);;
@@ -36,16 +45,19 @@ TEST_CASE("Jagged.Add", "[Jagged]") {
     int success = 0;
     ASSERT_EQ(5, jagged_element(&jagged, 1, 0, &success));
     ASSERT_EQ(0, success);
+    ASSERT_EQ(5, test_entry_get_element(jagged.bins[1], 0));
 
     jagged_add(&jagged, 1, 7);
     ASSERT_EQ(2, jagged_size(&jagged));
     success = 0;
     ASSERT_EQ(7, jagged_element(&jagged, 1, 1, &success));
     ASSERT_EQ(0, success);
+    ASSERT_EQ(7, test_entry_get_element(jagged.bins[1], 1));
 
     jagged_add(&jagged, 7, 71);
     ASSERT_EQ(3, jagged_size(&jagged));
     ASSERT_EQ(71, jagged_element(&jagged, 7, 0, &success));
+    ASSERT_EQ(71, test_entry_get_element(jagged.bins[7], 0));
 
     // Check linked list structure
     ASSERT_EQ(7, jagged.bins[1]->next->value);
@@ -96,14 +108,26 @@ TEST_CASE("Jagged.Pack", "[Jagged]") {
     ASSERT_FALSE(jagged.offsets == NULL);
 
     int success = 0;
-    ASSERT_EQ(5, jagged_element(&jagged, 2, 0, &success));
+    ASSERT_EQ(5, jagged_element(&jagged, 2, 0, &success));  
+    // ^^^ this line is causing issues; 17:33 - not anymore
     ASSERT_EQ(7, jagged_element(&jagged, 2, 1, &success));
     ASSERT_EQ(15, jagged_element(&jagged, 2, 2, &success));
     ASSERT_EQ(71, jagged_element(&jagged, 6, 0, &success));
 
     ASSERT_EQ(-1, jagged_add(&jagged, 3, 55));
 
+    // Test the offsets array
+    ASSERT_EQ(0, jagged.offsets[0]);
+    ASSERT_EQ(0, jagged.offsets[1]);
+    ASSERT_EQ(0, jagged.offsets[1]);
+    ASSERT_EQ(3, jagged.offsets[3]);
+    ASSERT_EQ(3, jagged.offsets[4]);
+    ASSERT_EQ(3, jagged.offsets[5]);
+    ASSERT_EQ(3, jagged.offsets[6]);
+    ASSERT_EQ(4, jagged.offsets[7]);
+
     jagged_free(&jagged);
+    // ^^ seg faults on the jagged free
 }
 
 TEST_CASE("Jagged.Unpack", "[Jagged]") {

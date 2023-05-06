@@ -9,6 +9,8 @@ int main(int argc, char** argv) {
     jagged_add(&jagged, 1, 108);
     int success = 0;
     printf("%d\n", jagged_element(&jagged, 1, 0, &success));
+    jagged_pack(&jagged);
+    printf("%d\n", jagged_element(&jagged, 1, 0, &success));
 
 //     jagged_add(&jagged, 4, 3);
 //     jagged_add(&jagged, 1, 13);
